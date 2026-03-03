@@ -55,7 +55,7 @@ ui <- fluidPage(theme = shinytheme("spacelab"),
                   sidebarPanel(
                     radioButtons('upload_or_default', "Upload Files or Run Example?", 
                                  choices = c('Upload Files', 'Run Example Files'), 
-                                 selected = 'Run Example Files'),
+                                 selected = 'Upload Files'),
                     #radioButtons('bi_or_tri', "What do you want to test?", 
                     #             choices = c('Angular residuals only', 'Angular and ranging residuals'), 
                     #             selected = 'Angular residuals only'),
