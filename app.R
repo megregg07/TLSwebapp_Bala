@@ -29,6 +29,7 @@ library(MASS)      ## for mvrnorm()
 library(ggplot2)
 library(tidyr)
 library(tools)     ## for determining file extension
+library(stringr)   ## for naming things
 
 
 ## define where to get functions from
@@ -56,18 +57,21 @@ ui <- fluidPage(theme = shinytheme("spacelab"),
                     radioButtons('upload_or_default', "Upload Files or Run Example?", 
                                  choices = c('Upload Files', 'Run Example Files'), 
                                  selected = 'Upload Files'),
-                    #radioButtons('bi_or_tri', "What do you want to test?", 
-                    #             choices = c('Angular residuals only', 'Angular and ranging residuals'), 
-                    #             selected = 'Angular residuals only'),
-                    h2("TLS - Upload Data"),
-                    fileInput('file1',"Baseline data", accept = c(".csv", ".txt")),
-                    textInput(inputId = "dataname_base",
-                              label = "Baseline Data Name:",
-                              value = "Baseline"),
-                    fileInput('file2', "Test data", accept = c(".csv", ".txt")),
-                    textInput(inputId = "dataname_test",
-                              label = "Test Data Name:",
-                              value = "Test"),
+                    conditionalPanel(
+                      condition = "input.upload_or_default == 'Upload Files'", 
+                      h2('TLS Data'),
+                      fileInput('file1',"Baseline data", accept = c(".csv", ".txt")),
+                      div(style = "margin-top: -20px"),
+                      textInput(inputId = "dataname_base",
+                                label = "Baseline Data Nickname:",
+                                value = "Baseline"),
+                      fileInput('file2', "Test data", accept = c(".csv", ".txt")),
+                      div(style = "margin-top: -20px"),
+                      textInput(inputId = "dataname_test",
+                                label = "Test Data Nickname:",
+                                value = "Test"), 
+                      selectInput('units','TLS units',choices=c('mm', 'meters', 'inches')),
+                      ),
                     #fileInput('filename_baseline_p1', "Position 1", accept = c(".csv", ".txt")), 
                     #div(style = "margin-top: -25px"),
                     #fileInput('filename_baseline_p2', "Position 2", accept = c(".csv", ".txt")),
@@ -84,7 +88,7 @@ ui <- fluidPage(theme = shinytheme("spacelab"),
                     #div(style = "margin-top: -25px"),
                     #fileInput('filename_testdata_p4', "Position 4", accept = c(".csv", ".txt")),
                     #div(style = "margin-top: -25px"),
-                    selectInput('units','TLS units',choices=c('mm', 'meters', 'inches')),
+                    #selectInput('units','TLS units',choices=c('mm', 'meters', 'inches')),
                     #h2("Tape Measurements"),
                     #fileInput('filename_tapedata', "Dataset of Tape Measurements", accept = c(".csv", ".txt")), 
                     #div(style = "margin-top: -25px"),
@@ -190,6 +194,7 @@ server <- function(input, output) {
     }
   })
   
+
   ## IMPORT TEST DATA
   ## (Bala's 2025 data set, if using example file)
   data_p1test = reactive({
