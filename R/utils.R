@@ -41,10 +41,10 @@ plot_my_residuals <- function(Mp) {
   my_plot <- Mp %>%
     pivot_longer(cols = theta:r, names_to = "variable", values_to = "residual") %>%
     mutate(variable = factor(variable, levels = c('theta', 'phi', 'r'))) %>%
-    ggplot(aes(x = as.factor(target), y = residual)) +
+    ggplot(aes(x = as.factor(target), y = residual, color = as.factor(position))) +
     facet_wrap(vars(variable), nrow = 3, scales = "free_y") + geom_point() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-    xlab("Target") + ggtitle(dname)
+    xlab("Target") + ggtitle(dname) +labs(color='Position') 
   
   return(my_plot)
 }
